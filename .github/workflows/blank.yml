@@ -52,4 +52,4 @@ jobs:
           docker ps
           nslookup google.com
           nslookup pfizer.com
-          nslookup artifactory.pfizer.com
+          nslookup vessel.pfizer.com
