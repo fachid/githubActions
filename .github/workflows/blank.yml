@@ -52,4 +52,4 @@ jobs:
           docker ps
           nslookup google.com
           nslookup pfizer.com
-          ping 162.48.120.68
+          ping 162.48.120.68 -c 3
