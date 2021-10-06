@@ -50,4 +50,6 @@ jobs:
           aws --version
           docker images
           docker ps
-          ping artifactory.pfizer.com
+          nslookup google.com
+          nslookup pfizer.com
+          nslookup artifactory.pfizer.com
