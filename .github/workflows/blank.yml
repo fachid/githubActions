@@ -40,3 +40,7 @@ jobs:
         run: |
           pwd
           ls -la
+          cat /etc/issue
+          python --version
+          aws-cli --version
+          
