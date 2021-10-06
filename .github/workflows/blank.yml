@@ -48,4 +48,4 @@ jobs:
       - name: Run a  script
         run: |
           aws --version
-          aws-cli --version
+          kubectl --version
