@@ -42,6 +42,7 @@ jobs:
         run: |
           pwd
           ls -la
+          echo "test file" > test.txt
           cat /etc/issue
           python --version
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -53,3 +54,4 @@ jobs:
           docker images
           docker ps
           nslookup google.com
+          ls -la
