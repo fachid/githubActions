@@ -8,15 +8,16 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-"""
-A dummy docstring.
-"""
+    """
+    A dummy docstring.
+    """
     print(request.headers)
     return "Hello World!"
 
 
 if __name__ == "__main__":
+    """
+    A dummy docstring.
+    """    
     app.run()
-"""
-A dummy docstring.
-"""    
+
