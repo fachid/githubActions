@@ -1,3 +1,6 @@
+"""
+high level support for doing this and that.
+"""
 from flask import Flask, request
 
 app = Flask(__name__)
