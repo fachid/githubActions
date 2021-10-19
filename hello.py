@@ -13,7 +13,7 @@ def hello():
 
 
 if __name__ == "__main__":
+    app.run()
 """
 A dummy docstring.
-"""
-    app.run()
+"""    
