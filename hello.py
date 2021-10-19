@@ -13,4 +13,5 @@ def hello():
 
 
 if __name__ == "__main__":
+"""A dummy docstring."""
     app.run()
