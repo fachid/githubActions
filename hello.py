@@ -8,6 +8,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
+"""
+A dummy docstring.
+"""
     print(request.headers)
     return "Hello World!"
 
