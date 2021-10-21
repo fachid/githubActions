@@ -1,0 +1,7 @@
+cassandra-driver
+flask
+flask_restful
+pandas
+flask_cors
+flask-swagger-ui
+retrying
