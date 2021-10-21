@@ -23,5 +23,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        #pylint *.py --disable=C,R,W
         pylint `find . -name *.py |xargs`
