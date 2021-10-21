@@ -14,6 +14,7 @@ def hello():
     A dummy docstring.
     """
     print(request.headers)
+    print(request.headers)
     return "Hello World!"
 
 
