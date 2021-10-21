@@ -23,4 +23,5 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint `find . -name *.py |xargs`
+        pylint *.py
+        #pylint `find . -name *.py |xargs`
