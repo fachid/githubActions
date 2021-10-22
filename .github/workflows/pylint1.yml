@@ -3,7 +3,7 @@ name: Pylint1
 on:
   push:
     branches:
-    - '**'
+    - 'dev'
     paths:
     - '**.py'
 
