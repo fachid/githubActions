@@ -1,11 +1,12 @@
 name: Pylint1
 
 on:
-  push:
-    branches:
-    - 'dev'
-    paths:
-    - '**.py'
+  #push:
+    #branches:
+    #- 'dev'
+    #paths:
+    #- '**.py'
+  workflow_dispatch:    
 
 jobs:
   build:
