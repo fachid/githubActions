@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build1:
+  build:
     # The type of runner that the job will run on
     runs-on: self-hosted
 
@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo build1
+        run: echo build
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
@@ -35,9 +35,10 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
-  build2:
+  deploy:
     # The type of runner that the job will run on
     runs-on: self-hosted
+    needs: build
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -46,7 +47,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo build2
+        run: echo deploy
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
