@@ -1,9 +1,10 @@
 name: linter
 
 on: 
-  push:
-    paths-ignore:
-    - '*/workflows/*'
+  #push:
+    #paths-ignore:
+    #- '*/workflows/*'
+  workflow_dispatch:
 
 jobs:
   liner:
