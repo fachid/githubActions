@@ -1,0 +1,4 @@
+# Use busybox as the base image
+FROM busybox
+# Run the executable file
+CMD /home/main
