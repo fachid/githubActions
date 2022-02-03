@@ -34,6 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          ping artifactory.pfizer.com -c 4 
           
   deploy:
     # The type of runner that the job will run on
@@ -54,4 +55,4 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          ping artifactory.pfizer.com -c 4 
+          
