@@ -1,5 +1,4 @@
-FROM jenkins/jenkins:2.333
-# if we want to install via apt
+FROM jenkins/jenkins:2.321
 USER root
 
 RUN apt-get update \
