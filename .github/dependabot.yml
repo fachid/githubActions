@@ -15,3 +15,12 @@ updates:
     # Check for updates once a week
     schedule:
       interval: "daily"
+      
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/"
+    target-branch: "develop"
+    # Check for updates once a week
+    schedule:
+      interval: "daily"      
