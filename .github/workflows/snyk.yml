@@ -43,7 +43,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: test
+          command: monitor
           # Which Snyk command to run, defaults to test
           #command: # optional, default is test
           # Additional arguments to pass to Snyk
