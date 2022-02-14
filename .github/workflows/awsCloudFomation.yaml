@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: aws-actions/setup-sam@v1
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: aaa
+          aws-secret-access-key: aaa
+          aws-region: us-east-1
+          aws-session-token: aaa
+      # sam build
+      - run: sam build --use-container
+
+# Run Unit tests- Specify unit tests here
+
+# sam deploy
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name sbx-dio-IAS-CLEAR-2-0
