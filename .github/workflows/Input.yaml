@@ -17,6 +17,10 @@ on:
         description: 'AWS_DEFAULT_REGION_IN'
         required: true
         default: 'us-east-1'
+      AWS_SESSION_TOKEN:
+        description: 'AWS_SESSION_TOKEN_IN'
+        required: true
+        default: '-'        
       region:
         description: 'AWS Region to deploy to'
         required: true
@@ -44,10 +48,10 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID != '' }}
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}        
+        aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
+        aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
+        aws-region: ${{ github.event.inputs.AWS_SESSION_TOKEN_IN }}  
+        aws-session-token: ${{ github.event.inputs.AWS_DEFAULT_REGION_IN }}        
     
     - name: Execute      
       env:
@@ -56,3 +60,4 @@ jobs:
         echo "ok"
         echo "$REGION"
         aws sts get-caller-identity | jq -r '.Account' 
+        aws s3 ls
