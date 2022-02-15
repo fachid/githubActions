@@ -37,7 +37,7 @@ jobs:
 
     - name: Configure AWS credentials from secrets
       uses: aws-actions/configure-aws-credentials@v1
-      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID == '' }}
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN == '' }}
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -46,7 +46,7 @@ jobs:
         
     - name: Configure AWS credentials from inputs 
       uses: aws-actions/configure-aws-credentials@v1
-      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID != '' }}
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
       with:
         aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
         aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
