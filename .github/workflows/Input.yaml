@@ -5,22 +5,22 @@ on:
 
   workflow_dispatch:
     inputs:
-      AWS_ACCESS_KEY_ID:
-        description: 'AWS_ACCESS_KEY_ID_IN'
+      AWS_ACCESS_KEY_ID_IN:
+        description: 'AWS_ACCESS_KEY_ID'
         required: true
         default: '-'
-      AWS_SECRET_ACCESS_KEY:
-        description: 'AWS_SECRET_ACCESS_KEY_IN'
+      AWS_SECRET_ACCESS_KEY_IN:
+        description: 'AWS_SECRET_ACCESS_KEY'
         required: true
         default: '-'
-      AWS_DEFAULT_REGION:
-        description: 'AWS_DEFAULT_REGION_IN'
+      AWS_SESSION_TOKEN_IN:
+        description: 'AWS_SESSION_TOKEN'
+        required: true
+        default: '-'          
+      AWS_DEFAULT_REGION_IN:
+        description: 'AWS_DEFAULT_REGION'
         required: true
         default: 'us-east-1'
-      AWS_SESSION_TOKEN:
-        description: 'AWS_SESSION_TOKEN_IN'
-        required: true
-        default: '-'        
       region:
         description: 'AWS Region to deploy to'
         required: true
@@ -50,8 +50,9 @@ jobs:
       with:
         aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
         aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
+        aws-session-token: ${{ github.event.inputs.AWS_SESSION_TOKEN_IN }}           
         aws-region: ${{ github.event.inputs.AWS_DEFAULT_REGION_IN }}  
-        aws-session-token: ${{ github.event.inputs.AWS_SESSION_TOKEN_IN }}        
+     
     
     - name: Execute      
       env:
