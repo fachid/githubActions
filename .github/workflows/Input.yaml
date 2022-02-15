@@ -1,4 +1,4 @@
-name: input
+name: Input
 
 on:
   push:
