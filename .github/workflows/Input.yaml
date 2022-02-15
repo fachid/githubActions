@@ -58,7 +58,7 @@ jobs:
       env:
         REGION: ${{ github.event.inputs.region}}
       run: |
-        echo "ok"
+        echo "RUNNING"
         echo "$REGION"
         aws sts get-caller-identity | jq -r '.Account' 
         aws s3 ls
