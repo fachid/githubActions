@@ -46,4 +46,4 @@ jobs:
       run: |
         echo "ok"
         echo "$REGION"
-        aws sts get-caller-identity | jq -r \'.Account\' 
+        aws sts get-caller-identity | jq -r '.Account' 
