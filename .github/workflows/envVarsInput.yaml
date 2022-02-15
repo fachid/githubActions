@@ -1,0 +1,31 @@
+on:
+  push:
+
+  workflow_dispatch:
+    inputs:
+      region:
+        description: 'AWS Region to deploy to'
+        required: true
+        default: 'us-east-1'
+      baseImageTag:
+        description: 'vessel-lambda-baseimage Tag To Use'
+        required: true
+        default: 1
+      deployment_env:
+        description: 'What environment is being deployed'
+        required: true
+        default: 'dev'
+
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      env:
+        REGION: ${{ github.event.inputs.region}}
+      run: |
+        echo "ok"
+        echo "$REGION"
