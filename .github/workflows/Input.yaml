@@ -38,6 +38,8 @@ jobs:
     - name: Configure AWS credentials from secrets
       uses: aws-actions/configure-aws-credentials@v1
       if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN == '' }}
+      env:
+        TRIGGER: "SECRETS"
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -47,6 +49,8 @@ jobs:
     - name: Configure AWS credentials from inputs 
       uses: aws-actions/configure-aws-credentials@v1
       if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
+      env:
+        TRIGGER: "MANUAL"
       with:
         aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
         aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
@@ -60,5 +64,6 @@ jobs:
       run: |
         echo "RUNNING"
         echo "$REGION"
+        echo "$TRIGGER"
         aws sts get-caller-identity | jq -r '.Account' 
         aws s3 ls
