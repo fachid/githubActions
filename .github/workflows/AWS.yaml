@@ -1,0 +1,112 @@
+on:
+  push:
+    branches:
+      - workflow-deploy
+
+  workflow_dispatch:
+    inputs:
+
+      AppName:
+        description: 'Application name'
+        required: true
+        default: 'IAS-CLEAR-2-0'
+
+      Environment:
+        description: 'What environment is being deployed'
+        required: true
+        default: 'dev'
+
+      ECRAccountNumber:
+        description: 'AWS Account Number hosting ECR Repo'
+        required: true
+        default: '420737321821'
+
+      ImagePath:
+        description: 'What image is being deployed'
+        required: true
+        default: 'sbx-iam-dummy-function:dummyfunction-d1889b0dbf47-dev'
+                  
+
+
+      AWS_ACCESS_KEY_ID_IN:
+        description: 'AWS_ACCESS_KEY_ID'
+        required: true
+        default: '-'
+      AWS_SECRET_ACCESS_KEY_IN:
+        description: 'AWS_SECRET_ACCESS_KEY'
+        required: true
+        default: '-'
+      AWS_SESSION_TOKEN_IN:
+        description: 'AWS_SESSION_TOKEN'
+        required: true
+        default: '-'          
+      AWS_DEFAULT_REGION_IN:
+        description: 'AWS_DEFAULT_REGION'
+        required: true
+        default: 'us-east-1'        
+
+
+
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+
+
+    - name: Configure AWS credentials from secrets
+      uses: aws-actions/configure-aws-credentials@v1
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN == '' }}
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: us-east-1      
+
+    - name: Deploy to AWS with CloudFormation triggered automatically
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN == '' }}
+      with:
+        name: sbx-IAS-CLEAR-2-0
+        template: template.yaml
+        no-fail-on-empty-changeset: "1"
+        capabilities: CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+        parameter-overrides: >-
+          ECRAccountNumber=${{ secrets.AWS_ACCOUNT_NUMBER }}
+
+
+
+
+    - name: Configure AWS credentials from inputs 
+      uses: aws-actions/configure-aws-credentials@v1
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
+      with:
+        aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
+        aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
+        aws-session-token: ${{ github.event.inputs.AWS_SESSION_TOKEN_IN }}           
+        aws-region: ${{ github.event.inputs.AWS_DEFAULT_REGION_IN }}  
+
+    - name: Deploy to AWS with CloudFormation triggered manually
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
+      with:
+        name: sbx-${{ github.event.inputs.AppName }}
+        template: template.yaml
+        no-fail-on-empty-changeset: "1"
+        capabilities: CAPABILITY_NAMED_IAM, CAPABILITY_AUTO_EXPAND
+        parameter-overrides: >-
+          AppName=${{ github.event.inputs.AppName }}
+          ECRAccountNumber=${{ secrets.AWS_ACCOUNT_NUMBER }},
+          Environment=${{ github.event.inputs.AppName }}
+
+ 
