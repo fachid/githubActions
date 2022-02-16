@@ -30,6 +30,8 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    env:
+      TRIGGER: "aa"
 
     steps:
     - name: Checkout
@@ -38,24 +40,22 @@ jobs:
     - name: Configure AWS credentials from secrets
       uses: aws-actions/configure-aws-credentials@v1
       if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN == '' }}
-      env:
-        TRIGGER: "SECRETS"
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        TRIGGER: "secrets"
         
     - name: Configure AWS credentials from inputs 
       uses: aws-actions/configure-aws-credentials@v1
       if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
-      env:
-        TRIGGER: "MANUAL"
       with:
         aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN }}
         aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY_IN }}
         aws-session-token: ${{ github.event.inputs.AWS_SESSION_TOKEN_IN }}           
-        aws-region: ${{ github.event.inputs.AWS_DEFAULT_REGION_IN }}  
+        aws-region: ${{ github.event.inputs.AWS_DEFAULT_REGION_IN }}
+        TRIGGER: "manual"
      
     
     - name: Execute      
