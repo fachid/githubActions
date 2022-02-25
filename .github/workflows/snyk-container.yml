@@ -14,13 +14,14 @@
 name: Snyk Container
 
 on:
-  push:
-    branches: [ main, test ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
-  schedule:
-    - cron: '22 13 * * 6'
+#   push:
+#     branches: [ main, test ]
+#   pull_request:
+#     # The branches below must be a subset of the branches above
+#     branches: [ main ]
+#   schedule:
+#     - cron: '22 13 * * 6'
+  workflow_dispatch: 
 
 jobs:
   snyk:
