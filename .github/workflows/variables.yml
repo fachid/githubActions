@@ -31,6 +31,7 @@ jobs:
         run: |
           echo "Hello, world!"
           echo "##[set-output name=test_secret;]$(echo ${{ secrets.TEST_SERCRET }})"
+          echo "DION=yellow" >> $GITHUB_ENV
 
 
 
@@ -40,7 +41,12 @@ jobs:
           echo ${GITHUB_REF#refs/heads/}
           echo ${GITHUB_REF_NAME}
           echo ${GITHUB_ACTION}
-          env
+          echo ${DION}
+          echo "DION=GREEN" >> $GITHUB_ENV
           
-          
+
+      - name: Run a one-line script
+        run: |
+          echo ${DION}
+
           
