@@ -37,4 +37,5 @@ jobs:
       - name: Run a one-line script
         run: |
           echo ${{ steps.setVariable.outputs.test_secret }}
+          echo ${GITHUB_REF#refs/heads/}
           
