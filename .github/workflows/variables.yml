@@ -40,6 +40,7 @@ jobs:
           echo ${GITHUB_REF#refs/heads/}
           echo ${GITHUB_REF_NAME}
           echo ${GITHUB_ACTION}
+          env
           
           
           
