@@ -49,6 +49,7 @@ jobs:
           echo ${GITHUB_ACTION}
           echo ${DION}
           echo "DION=GREEN" >> $GITHUB_ENV
+          echo "${{ github.event.inputs.AppName }}"
           echo "$APP_NAME=${{ github.event.inputs.AppName }}" >> $GITHUB_ENV
           echo "ok"
 
