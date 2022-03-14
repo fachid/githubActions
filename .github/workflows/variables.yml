@@ -60,7 +60,8 @@ jobs:
 
       - name: Run a one-line script
         if: |
-          env.APP_NAME == 'DION'
+          env.APP_NAME == 'DION' &&
+          env.DION == 'GREEN'
         run: |
           echo ${DION}
           echo "${{ github.event.inputs.AppName }}"
