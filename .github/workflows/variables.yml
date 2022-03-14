@@ -55,4 +55,8 @@ jobs:
       - name: Run a one-line script
         #if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
         run: |
-          echo $APP_NAME          
+          if [ $APP_NAME == "DION" ]
+          then
+            echo $APP_NAME          
+          fi 
+          echo "ok"
