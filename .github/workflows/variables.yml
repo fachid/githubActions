@@ -53,7 +53,7 @@ jobs:
           
 
       - name: Run a one-line script
-        if: ${{ env.APP_NAME }} == 'DION' &&  ${{ env.DION }} == "GREEN"
+        if: ${{ env.APP_NAME }} == 'DION' && ${{ env.DION }} == "GREEN"
         run: |
           if [ "$APP_NAME" == "DION" ]
           then
