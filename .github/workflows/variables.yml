@@ -60,7 +60,7 @@ jobs:
 
       - name: Run a one-line script
         if: |
-          "${APP_NAME }" == "DION"
+          ${APP_NAME} == "DION"
         run: |
           echo ${DION}
           echo "${{ github.event.inputs.AppName }}"
