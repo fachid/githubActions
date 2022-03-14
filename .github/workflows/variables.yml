@@ -49,12 +49,13 @@ jobs:
           echo ${GITHUB_ACTION}
           echo ${DION}
           echo "DION=GREEN" >> $GITHUB_ENV
+          echo "APP_NAME=${{ github.event.inputs.AppName }}" >> $GITHUB_ENV
           
 
       - name: Run a one-line script
         #if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
         run: |       
-          if [ ${{ github.event.inputs.AppName }} == "DION" ]
+          if [ $APP_NAME == "DION" ]
           then
           echo Hey that\'s a large number.
           echo ${DION}
