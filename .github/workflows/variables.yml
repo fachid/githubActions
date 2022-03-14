@@ -54,13 +54,5 @@ jobs:
 
       - name: Run a one-line script
         #if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
-        run: |       
-          if [ $APP_NAME == "DION" ]
-          then
-          echo Hey that\'s a large number.
-          echo ${DION}
-          pwd
-          fi
-          
-
-          
+        run: |
+          echo $APP_NAME          
