@@ -46,6 +46,7 @@ jobs:
           
 
       - name: Run a one-line script
+        if: ${{ github.event.inputs.AWS_ACCESS_KEY_ID_IN != '' }}
         run: |
           echo ${DION}
 
