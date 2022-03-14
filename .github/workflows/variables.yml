@@ -38,7 +38,6 @@ jobs:
           echo "Hello, world!"
           echo "##[set-output name=test_secret;]$(echo ${{ secrets.TEST_SERCRET }})"
           echo "DION=yellow" >> $GITHUB_ENV
-          echo "${DION}"
 
 
 
@@ -52,18 +51,10 @@ jobs:
           echo "DION=GREEN" >> $GITHUB_ENV
           echo "$APP_NAME=${{ github.event.inputs.AppName }}" >> $GITHUB_ENV
           echo "ok"
-          
+
+
 
       - name: Run a one-line script
-        if: |
-          ${{ env.APP_NAME }} == 'DION'
         run: |
-          if [ "$APP_NAME" == "DION" ]
-          then
-            echo "$APP_NAME"          
-            echo "ooo${APP_NAME}aaa"
-          fi 
-          
-          echo "ok"
-          echo ${{ env.DION }}
-          echo ${{ env.APP_NAME }}
+          echo ${DION}
+
