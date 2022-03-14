@@ -62,4 +62,7 @@ jobs:
             echo $APP_NAME          
             echo ooo${APP_NAME}aaa
           fi 
+          
           echo "ok"
+          echo ${{ env.DION }}
+          echo ${{ env.APP_NAME }}
