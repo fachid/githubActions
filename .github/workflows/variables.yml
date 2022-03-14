@@ -58,5 +58,6 @@ jobs:
           if [ "$APP_NAME" == "DION" ]
           then
             echo $APP_NAME          
+            echo ooo${APP_NAME}aaa
           fi 
           echo "ok"
