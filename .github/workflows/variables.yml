@@ -38,7 +38,7 @@ jobs:
           echo "Hello, world!"
           echo "##[set-output name=test_secret;]$(echo ${{ secrets.TEST_SERCRET }})"
           echo "DION=yellow" >> $GITHUB_ENV
-          echo ${DION}
+          echo "${DION}"
 
 
 
@@ -60,8 +60,8 @@ jobs:
         run: |
           if [ "$APP_NAME" == "DION" ]
           then
-            echo $APP_NAME          
-            echo ooo${APP_NAME}aaa
+            echo "$APP_NAME"          
+            echo "ooo${APP_NAME}aaa"
           fi 
           
           echo "ok"
