@@ -38,7 +38,7 @@ jobs:
           echo "Hello, world!"
           echo "##[set-output name=test_secret;]$(echo ${{ secrets.TEST_SERCRET }})"
           echo "DION=yellow" >> $GITHUB_ENV
-          echo ${{ github.event.inputs.AppName }}
+          echo "${{ github.event.inputs.AppName }}"
           echo "opk"
 
 
