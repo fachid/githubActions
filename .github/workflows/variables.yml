@@ -40,6 +40,7 @@ jobs:
           echo "${{ github.event.inputs.AppName }}"
           
           echo "DION=yellow" >> $GITHUB_ENV
+          echo "${{ github.event.inputs.AppName }}"
           echo "ok"
 
 
@@ -48,12 +49,14 @@ jobs:
       - name: Run a one-line script
         run: |
           echo ${{ steps.setVariable.outputs.test_secret }}
+          echo "${{ github.event.inputs.AppName }}"
           echo ${GITHUB_REF#refs/heads/}
           echo ${GITHUB_REF_NAME}
           echo ${GITHUB_ACTION}
           echo ${DION}
           echo "DION=GREEN" >> $GITHUB_ENV
           echo "ok"
+          echo "${{ github.event.inputs.AppName }}"
 
 
 
