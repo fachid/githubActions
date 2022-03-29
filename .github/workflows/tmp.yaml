@@ -1,7 +1,9 @@
 name: TMP
 
 on:
-  # push:
+  push:
+    branches:
+      - test
 
   workflow_dispatch:
     inputs:
@@ -44,3 +46,4 @@ jobs:
       run: |
         echo "RUNNING ok"
         echo $IMAGE_TAG
+        echo ${{}}
