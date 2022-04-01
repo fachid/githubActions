@@ -20,7 +20,6 @@ jobs:
     - run: mkdir -p artifact
 
     - run: touch artifact/world1.txt
-    - run: touch artifact/world2.txt    
 
     - uses: actions/upload-artifact@master
       with:
@@ -40,7 +39,7 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: echo hello1 >> artifact/world1.txt    
+    - run: echo hello1 >> artifact/world.txt    
 
     - uses: actions/upload-artifact@master
       with:
@@ -61,7 +60,7 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: echo hello2 >> artifact/world1.txt    
+    - run: echo hello2 >> artifact/world.txt    
     
     - uses: actions/upload-artifact@master
       with:
@@ -73,8 +72,6 @@ jobs:
   job3:
     runs-on: ubuntu-latest
     needs: [job1, job2] 
-    env:
-      TRIGGER: "aa"
 
     steps:
     - uses: actions/download-artifact@master
@@ -82,5 +79,5 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: cat artifact/world1.txt    
-    - run: cat artifact/world2.txt        
+    - run: cat artifact/world.txt    
+     
