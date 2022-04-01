@@ -39,7 +39,7 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: echo hello1 >> artifact/world.txt    
+    - run: date >> artifact/world.txt    
 
     - uses: actions/upload-artifact@master
       with:
@@ -60,7 +60,7 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: echo hello2 >> artifact/world.txt    
+    - run: date >> artifact/world.txt    
     
     - uses: actions/upload-artifact@master
       with:
