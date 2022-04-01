@@ -22,7 +22,7 @@ jobs:
     
     - run: mkdir -p artifact
 
-    - run: echo hello1 > artifact/world.txt    
+    - run: echo hello1 >> artifact/world.txt    
 
     - uses: actions/upload-artifact@master
       with:
@@ -41,7 +41,7 @@ jobs:
     
     - run: mkdir -p artifact
 
-    - run: echo hello2 > artifact/world.txt    
+    - run: echo hello2 >> artifact/world.txt    
     
     - uses: actions/upload-artifact@master
       with:
