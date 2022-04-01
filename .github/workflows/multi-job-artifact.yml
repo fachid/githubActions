@@ -61,7 +61,7 @@ jobs:
         name: my-artifact
         path: artifact
 
-    - run: echo hello2 >> artifact/world2.txt    
+    - run: echo hello2 >> artifact/world1.txt    
     
     - uses: actions/upload-artifact@master
       with:
