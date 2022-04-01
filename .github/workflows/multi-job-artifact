@@ -1,0 +1,64 @@
+name: multi-job-artifact
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      AWS_ACCESS_KEY_ID_IN:
+        description: 'AWS_ACCESS_KEY_ID'
+        required: true
+        default: '-'   
+
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    env:
+      TRIGGER: "aa"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - run: mkdir -p artifact
+
+    - run: echo hello1 > artifact/world.txt    
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: my-artifact
+        path: artifact    
+    
+    
+  job2:
+    runs-on: ubuntu-latest
+    env:
+      TRIGGER: "aa"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - run: mkdir -p artifact
+
+    - run: echo hello2 > artifact/world.txt    
+    
+    - uses: actions/upload-artifact@master
+      with:
+        name: my-artifact
+        path: artifact        
+        
+        
+        
+  job3:
+    runs-on: ubuntu-latest
+    env:
+      TRIGGER: "aa"
+
+    steps:
+    - uses: actions/download-artifact@master
+      with:
+        name: my-artifact
+        path: artifact
+
+    - run: cat artifact/world.txt     
