@@ -24,7 +24,7 @@ jobs:
       - name: Run a one-line script
         run: |
           echo Hello, world!
-          echo -${{ github.event.ref_type }}
+          echo ${{ github.event.ref_type }}
           echo ${{ github.ref_name }}
           #exit 1
 
