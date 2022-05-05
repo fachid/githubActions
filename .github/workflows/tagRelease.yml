@@ -22,7 +22,7 @@ jobs:
 
       - run: echo "Print all environment variables"
       - run: | 
-          la -l 
+          ls -l 
           git tag -l 
           git status
         
