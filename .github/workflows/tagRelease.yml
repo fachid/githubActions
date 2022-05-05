@@ -21,7 +21,7 @@ jobs:
 
 
       - run: echo "Print all environment variables"
-      - run: git tag -l
+      - run: git tags -l
 
 
       # Runs a set of commands using the runners shell
