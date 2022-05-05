@@ -25,6 +25,19 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
+          echo "RC_TAG=${{ github.ref_name }}" >> $GITHUB_ENV  
+
+          VERSION_TAG=`git tag -l | sort -V | grep V | tail -n 1`
+
+          if [  x"$VERSION_TAG" == x ]; then
+            VERSION_TAG=V1
+          else
+            version=${VERSION_TAG#V}
+            VERSION_TAG=V$((version+1))
+          fi
+
+          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV            
+          
           
       - name: Create Release
         id: create_release
@@ -32,11 +45,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: V2
-          release_name: Release V2
+          tag_name: ${{ env.VERSION_TAG }}
+          release_name: Release ${{ env.VERSION_TAG }}
           body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+            Release ${{ env.VERSION_TAG }} created from ${{ env.RC_TAG }} Tag
           draft: false
-          prerelease: false
+          prerelease: false        
+
