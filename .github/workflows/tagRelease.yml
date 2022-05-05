@@ -19,6 +19,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+
+      - run: echo "Print all environment variables"
+      - run: git tag -l
+
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
@@ -26,7 +31,7 @@ jobs:
           echo test, and deploy your project.
           
           echo "RC_TAG=${{ github.ref_name }}" >> $GITHUB_ENV  
-          git tag -l | sort -V | grep V | tail -n 1
+          git tag -l 
           
           VERSION_TAG=`git tag -l | sort -V | grep V | tail -n 1`
 
