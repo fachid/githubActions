@@ -26,7 +26,8 @@ jobs:
           echo test, and deploy your project.
           
           echo "RC_TAG=${{ github.ref_name }}" >> $GITHUB_ENV  
-
+          git tag -l | sort -V | grep V | tail -n 1
+          
           VERSION_TAG=`git tag -l | sort -V | grep V | tail -n 1`
 
           if [  x"$VERSION_TAG" == x ]; then
