@@ -28,6 +28,7 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           echo $(if [ github.head_ref == main ]; then echo test; else echo dev; fi )
+          echo ${{ github.head_ref }}
           echo -n "environemnt:"
           echo ${{ secrets.ENV }}
           echo ${{ secrets.ENV }} | sed -e 's/\(.\)/\1 /g'
