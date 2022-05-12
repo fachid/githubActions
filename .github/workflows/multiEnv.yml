@@ -27,5 +27,5 @@ jobs:
           echo test, and deploy your project.
           echo $(if [ ${GITHUB_REF#refs/heads/} == main ]; then echo test; else echo dev; fi )
           echo -n "environemnt:"
-          echo ${{ secrets.env }}
-          echo ${{ secrets.env }} | sed -e 's/\(.\)/\1 /g'
+          echo ${{ secrets.ENV }}
+          echo ${{ secrets.ENV }} | sed -e 's/\(.\)/\1 /g'
