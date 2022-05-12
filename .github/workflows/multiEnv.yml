@@ -16,6 +16,7 @@ on:
         type: choice
         description: envitonemnt
         options:
+        - sbx
         - dev
         - test
         - prod 
