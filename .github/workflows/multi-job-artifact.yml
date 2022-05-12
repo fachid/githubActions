@@ -1,7 +1,7 @@
 name: multi-job-artifact
 
 on:
-  push:
+ # push:
   workflow_dispatch:
     inputs:
       AWS_ACCESS_KEY_ID_IN:
