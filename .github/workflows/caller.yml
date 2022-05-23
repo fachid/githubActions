@@ -13,3 +13,8 @@ jobs:
     uses: ./.github/workflows/called.yml
     with:
       username: mona
+  call-workflow-2:
+    needs: call-workflow
+    uses: ./.github/workflows/called.yml
+    with:
+      username: mona
