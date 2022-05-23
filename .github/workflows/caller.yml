@@ -10,7 +10,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   call-workflow:
-    uses: fachid/githubActions/edit/main/.github/workflows/called.yml@main
+    uses: .github/workflows/called.yml@main
     with:
       username: mona
 
