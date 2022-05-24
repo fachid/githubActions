@@ -22,7 +22,12 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo "snyk"
-          snyk
+
+
+          curl https://static.snyk.io/cli/latest/snyk-macos -o snyk
+          chmod +x ./snyk
+          mv ./snyk /usr/local/bin/
+          snyk --version
           
           
       # - name: Snyk
