@@ -14,10 +14,10 @@ jobs:
         echo "::set-output name=test::["a","b","c"]"
 
   builder:
-    needs: job1
+    needs: createMatrix
     runs-on: ubuntu-latest
     strategy:
-      matrix: job1.outputs.matrix
+      matrix: createMatrix.outputs.test
         #cfg: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
     - run: |
