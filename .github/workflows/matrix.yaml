@@ -3,23 +3,24 @@ name: matrix
 on:
   workflow_dispatch:
 
-job1:
-  runs-on: ubuntu-latest
-  outputs:
-    matrix: ${{ steps.set-matrix.outputs.matrix }}
-  steps:
-  - id: set-matrix
-    run: |
-      echo "::set-output name=matrix::[{\"go\":\"1.13\",\"commit\":\"v1.0.0\"},{\"go\":\"1.14\",\"commit\":\"v1.2.0\"}]"
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - id: set-matrix
+      run: |
+        echo "::set-output name=matrix::[{\"go\":\"1.13\",\"commit\":\"v1.0.0\"},{\"go\":\"1.14\",\"commit\":\"v1.2.0\"}]"
 
 
 
-builder:
-  needs: job1
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      cfg: ${{fromJson(needs.job1.outputs.matrix)}}
-  steps:
-  - run: |
-      echo bin-${{ matrix.cfg.go }}-${{ matrix.cfg.commit }}
+  builder:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cfg: ${{fromJson(needs.job1.outputs.matrix)}}
+    steps:
+    - run: |
+        echo bin-${{ matrix.cfg.go }}-${{ matrix.cfg.commit }}
