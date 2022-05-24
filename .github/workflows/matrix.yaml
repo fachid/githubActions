@@ -22,13 +22,13 @@ jobs:
         run: echo "${{ toJSON(needs.createMatrix.outputs) }}"
 
 
-  builder:
-    needs: my_echo
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: 
-        values: needs.createMatrix.outputs.matrix 
-        #cfg: ${{fromJson(needs.job1.outputs.matrix)}}
-    steps:
-    - run: |
-        echo bin-${{ matrix.values }}
+  # builder:
+  #   needs: my_echo
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix: 
+  #       values: needs.createMatrix.outputs.matrix 
+  #       #cfg: ${{fromJson(needs.job1.outputs.matrix)}}
+  #   steps:
+  #   - run: |
+  #       echo bin-${{ matrix.values }}
