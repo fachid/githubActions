@@ -22,4 +22,4 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         yq --version
-        yq e '.Resources[] | select( .Type == "AWS::S3::Bucket" )' enterpriseHLT-stack.yaml
+        yq e '.Resources[] | select( .Type == "AWS::S3::Bucket" )' template.yaml
