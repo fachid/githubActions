@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  job1:
+  createMatrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.set-matrix.outputs.test }}
     steps:
     - id: set-matrix
       run: |
