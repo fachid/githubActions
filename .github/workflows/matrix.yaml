@@ -19,7 +19,8 @@ jobs:
       - createMatrix
     steps:
       - name: Echo previous outputs
-        run: echo "${{ toJSON(needs.createMatrix.outputs) }}"
+        # run: echo "${{ toJSON(needs.createMatrix.outputs) }}"
+        run: echo "${{ needs.createMatrix.outputs }}"
 
 
   # builder:
