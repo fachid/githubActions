@@ -34,7 +34,9 @@ jobs:
           pip install -r requirements.txt
           snyk test
           
-          snyk container test --file=Dockerfile 
+          docker build -f Dockerfile_busybox -t busybox:test
+          snyk container test busybox:test --file=Dockerfile 
+          
           
       # - name: Snyk
       #   # You may pin to the exact commit or the version.
