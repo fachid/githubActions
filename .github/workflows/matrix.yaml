@@ -1,0 +1,23 @@
+name: matrix
+
+on:
+  workflow_dispatch:
+
+job1:
+  runs-on: ubuntu-latest
+  outputs:
+    matrix: ${{ steps.set-matrix.outputs.matrix }}
+  steps:
+  - id: set-matrix
+    run: |
+      echo "::set-output name=test::["a","b","c"]"
+
+builder:
+  needs: job1
+  runs-on: ubuntu-latest
+  strategy:
+    matrix: job1.outputs.matrix
+      #cfg: ${{fromJson(needs.job1.outputs.matrix)}}
+  steps:
+  - run: |
+      echo bin-${{ matrix.test }}
