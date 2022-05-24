@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        values: needs.createMatrix.outputs.values 
+        values: needs.createMatrix.outputs.matrix 
         #cfg: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
     - run: |
