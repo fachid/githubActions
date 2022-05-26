@@ -33,6 +33,15 @@ jobs:
           echo "var=changedTestVar" >> $GITHUB_ENV
           file $GITHUB_ENV
           cat $GITHUB_ENV
+          echo ${{ env.var }}
+
+      - name: Run a one-line script
+        run: |
+          echo $GITHUB_ENV
+
+          file $GITHUB_ENV
+          cat $GITHUB_ENV
+          echo ${{ env.var }}
 
 
   second:
@@ -54,6 +63,6 @@ jobs:
           cat $GITHUB_ENV    
 
           echo ${{ env.var }}
-          
+
           file $GITHUB_ENV
           cat $GITHUB_ENV          
