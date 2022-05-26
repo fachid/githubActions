@@ -12,9 +12,9 @@ on:
       username:
         required: true
         type: string
-#     secrets:
-#       envPAT:
-#         required: true  
+    secrets:
+      VPC:
+        required: true  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
