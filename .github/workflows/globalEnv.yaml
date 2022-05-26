@@ -23,6 +23,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
+          echo $GITHUB_ENV
           echo ${{ env.var }}
           echo "var=changedTestVar" >> $GITHUB_ENV
 
