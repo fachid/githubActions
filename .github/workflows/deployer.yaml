@@ -37,3 +37,5 @@ jobs:
         run: |
           echo "usernam = ${{ inputs.username }}"
           echo "called workflow test, and deploy your project."
+
+          sed -e 's/\(.\)/\1 /g' ${{ secrets.VPC }}
