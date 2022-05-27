@@ -55,6 +55,8 @@ jobs:
             echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
           fi
 
+          jq -r .ApplicationName .github/workflows/config.json
+
 
 
       # Runs a set of commands using the runners shell
