@@ -38,7 +38,12 @@ jobs:
           echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
 
           # set the application name
-          echo "APP_NAME=enterprise-hlt" >> $GITHUB_ENV 
+          appName=`jq -r .ApplicationName .github/workflows/config.json`
+          if [ $appName == "null" ]; then
+            
+          fi
+
+          echo "APP_NAME=$appName" >> $GITHUB_ENV 
 
           # Set Environment by Branch Name (sbx is all outside of protected branches)
           # This also sets the role to assume from secrets based on branch
@@ -56,6 +61,7 @@ jobs:
           fi
 
           jq -r .ApplicationName .github/workflows/config.json
+          yq e .application.name .github/workflows/config.yaml
 
 
 
