@@ -7,8 +7,6 @@ on:
       Environment:
         required: true
         type: string
-      StackTemplate: enterpriseHLT-stack.yaml
-        type: string
     secrets:
       VPC:
         required: false
