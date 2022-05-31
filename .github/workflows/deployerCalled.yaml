@@ -82,10 +82,11 @@ jobs:
         run: |
 
           params=`yq e '.Parameters | keys | .[]' enterpriseHLT-stack.yaml`
-          for I in params:
+          echo $params
+          for I in $params:
           do
             echo "parameter -> $I"
             p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
-            
+
           done
 
