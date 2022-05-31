@@ -22,44 +22,48 @@ on:
 
 
 jobs:
-
   build:
     name: deploy workflow
     environment: ${{ github.event.inputs.Environment }}  
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
 
-      - name: Setup Environment Variables
-        id: variables
-        run: |
 
-          # set short commit ID
-          #echo "SHORT_COMMIT_ID=${GITHUB_SHA::8}" >> $GITHUB_ENV 
-          echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-          # set the application name
-          appName=`yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml`        
-          if [ $appName == "null" ]; then
-            echo "No application name defined!"
-            exit 1
-          fi
-          echo "APP_NAME=$appName" >> $GITHUB_ENV 
+    - name: Setup Environment Variables
+      id: variables
+      run: |
 
-          # Set Environment by Branch Name (sbx is all outside of protected branches)
-          # This also sets the role to assume from secrets based on branch
+        # set short commit ID
+        #echo "SHORT_COMMIT_ID=${GITHUB_SHA::8}" >> $GITHUB_ENV 
+        echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
 
-          echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build if vulnerabilities found
-          
-          if [ ${{ github.ref_name }} == "main" ]; then
-            echo "ENVIRONMENT=test" >> $GITHUB_ENV
-            # echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build in case of vulnerabilities found for test
-          elif [ ${{ github.ref_name }} == "dev" ]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          else
-            lowercase=`echo sbx-${{ github.ref_name }} | tr '[:upper:]' '[:lower:]'`  # conver to lowercase
-            echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
+        # set the application name
+        appName=`yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml`        
+        if [ $appName == "null" ]; then
+          echo "No application name defined!"
+          exit 1
+        fi
+        echo "APP_NAME=$appName" >> $GITHUB_ENV 
+
+        # Set Environment by Branch Name (sbx is all outside of protected branches)
+        # This also sets the role to assume from secrets based on branch
+
+        echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build if vulnerabilities found
+        
+        if [ ${{ github.ref_name }} == "main" ]; then
+          echo "ENVIRONMENT=test" >> $GITHUB_ENV
+          # echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build in case of vulnerabilities found for test
+        elif [ ${{ github.ref_name }} == "dev" ]; then
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+        else
+          lowercase=`echo sbx-${{ github.ref_name }} | tr '[:upper:]' '[:lower:]'`  # conver to lowercase
+          echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
           fi
 
 
