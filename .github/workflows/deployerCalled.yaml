@@ -64,7 +64,7 @@ jobs:
 
     # check repo structure
     - name: Check repository.
-      runs: |
+      run: |
         echo "check repo"
 
 
