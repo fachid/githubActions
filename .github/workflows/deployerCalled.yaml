@@ -85,9 +85,11 @@ jobs:
           echo $params
           for I in $params:
           do
+            VPC=dion
             echo "parameter -> $I"
             p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
-            echo "$p ${{ secrets.`echo $I` }}"
+            # echo "$p ${{ secrets.`echo $I` }}"
+            echo "$p $`echo $I`"
 
           done
 
