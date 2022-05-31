@@ -64,6 +64,8 @@ jobs:
           jq -r .ApplicationName .github/config.json
           yq e .application.name .github/config.yaml
 
+          yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml
+          
 
 
       # Runs a set of commands using the runners shell
