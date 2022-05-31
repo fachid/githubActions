@@ -37,7 +37,7 @@ jobs:
           echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
 
           # set the application name
-          appName=`jq -r .ApplicationName .github/workflows/config.json`
+          appName=`jq -r .ApplicationName .github/config.json`
           
           if [ $appName == "null" ]; then
             echo "No application name defined!"
@@ -61,8 +61,8 @@ jobs:
             echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
           fi
 
-          jq -r .ApplicationName .github/workflows/config.json
-          yq e .application.name .github/workflows/config.yaml
+          jq -r .ApplicationName .github/config.json
+          yq e .application.name .github/config.yaml
 
 
 
