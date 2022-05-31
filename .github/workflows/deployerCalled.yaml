@@ -98,7 +98,7 @@ jobs:
           echo ${{ secrets.VPC }}
           echo "aa=VPC" >> $GITHUB_ENV
           echo $aa
-          echo "{{ env.aa }}"
+          echo "${{ env.aa }}"
 
           echo "secrets.$secret_name = ${{ secrets[env.secret_name] }} " | sed -e 's/\(.\)/\1 /g'
           echo "secrets.$secret_name = ${{ secrets[env.aa] }} " | sed -e 's/\(.\)/\1 /g'
