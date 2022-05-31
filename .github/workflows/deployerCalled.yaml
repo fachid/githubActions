@@ -87,6 +87,7 @@ jobs:
           do
             echo "parameter -> $I"
             p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
+            echo "$p ${{ secrets.$I }}"
 
           done
 
