@@ -18,7 +18,7 @@ on:
       OIDC_ROLE:
         required: true
       AWS_REGION:
-        required: true                        
+        required: true
 
 
 jobs:
@@ -65,7 +65,8 @@ jobs:
 
     # check repo structure
     - name: Check repository.
-
+      runs: |
+        echo "check repo"
 
 
 
@@ -81,44 +82,38 @@ jobs:
 
 
 
+      # # Runs a set of commands using the runners shell
+      # - name: Run a multi-line script
+      #   run: |
+      #     echo "usernam = ${{ inputs.username }}"
+      #     echo "called workflow test, and deploy your project."
+
+      #     echo ${{ secrets.VPC }}
+      #     echo ${{ secrets.VPC }} | sed -e 's/\(.\)/\1 /g'
+
+      #     echo "secret_name=VPC" >> $GITHUB_ENV
 
 
+      # # Runs a set of commands using the runners shell
+      # - name: Run a multi-line script
+      #   # env: 
+      #   #   secret_name: VPC
+      #   run: |
 
-
-
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo "usernam = ${{ inputs.username }}"
-          echo "called workflow test, and deploy your project."
-
-          echo ${{ secrets.VPC }}
-          echo ${{ secrets.VPC }} | sed -e 's/\(.\)/\1 /g'
-
-          echo "secret_name=VPC" >> $GITHUB_ENV
-
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        # env: 
-        #   secret_name: VPC
-        run: |
-
-          params=`yq e '.Parameters | keys | .[]' enterpriseHLT-stack.yaml`
-          echo $params
-          for I in $params:
-          do
-            echo "parameter -> $I"
-            p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
-          done
+      #     params=`yq e '.Parameters | keys | .[]' enterpriseHLT-stack.yaml`
+      #     echo $params
+      #     for I in $params:
+      #     do
+      #       echo "parameter -> $I"
+      #       p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
+      #     done
           
-          echo "--------------"
-          echo ${{ secrets.VPC }}
-          echo "aa=VPC" >> $GITHUB_ENV
-          echo $aa
-          echo "${{ env.aa }}"
+      #     echo "--------------"
+      #     echo ${{ secrets.VPC }}
+      #     echo "aa=VPC" >> $GITHUB_ENV
+      #     echo $aa
+      #     echo "${{ env.aa }}"
 
-          echo "secrets.$secret_name = ${{ secrets[env.secret_name] }} " | sed -e 's/\(.\)/\1 /g'
-          echo "secrets.$secret_name = ${{ secrets[env.aa] }} " | sed -e 's/\(.\)/\1 /g'
+      #     echo "secrets.$secret_name = ${{ secrets[env.secret_name] }} " | sed -e 's/\(.\)/\1 /g'
+      #     echo "secrets.$secret_name = ${{ secrets[env.aa] }} " | sed -e 's/\(.\)/\1 /g'
 

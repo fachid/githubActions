@@ -1,0 +1,711 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: eHLT
+
+Parameters:
+  APIDocsFunctionImagePath:
+    Type: String
+    Description: What Image is being deployed
+    Default: "sbx-iam-api-docs-function:latest"
+  ProcessRulesFunctionImagePath:
+    Type: String
+    Description: What Image is being deployed
+    Default: "sbx-process-rules:latest"
+  GetFormFieldsImagePath:
+    Type: String
+    Description: What Image is being deployed
+    Default: "sbx-get-form-fields:latest"
+  GetRulesImagePath:
+    Type: String
+    Description: What Image is being deployed
+    Default: "sbx-get-rules:latest"
+  AppName:
+    Type: String
+    Description: What is the application name
+    Default: "enterprise-hlt"
+  Environment:
+    Type: String
+    Description: What environment is being deployed
+    Default: "sbx"
+  S3AwsAccessKey:
+    Type: String
+    Description: AWS_ACCESS_KEY for s3 bucket
+    Default: "-"
+  S3AwsSecret:
+    Type: String
+    Description: AWS_SECRET for s3 bucket
+    Default: "-"    
+  S3BucketName:
+    Type: String
+    Description: s3 bucket name
+    Default: "-"    
+  SQSQueueName:
+    Type: String
+    Description: SQS queue name
+    Default: "-"
+  ReadabilityApiCdc:
+    Type: String
+    Description: Readability api cdc
+    Default: "-"        
+  vpc:
+    Type: String
+    Description: vpc id
+    Default: "-"
+  vpce:
+    Type: String
+    Description: vpc endoint id
+    Default: "-"
+
+
+
+Globals:
+  Function:
+    Timeout: 899
+    MemorySize: 1536
+    Environment:
+      Variables:
+        TABLE: !Ref MainTable
+        REGION: !Sub "${AWS::Region}"
+        AWSENV: !Sub "${Environment}"
+        BUCKET: !Ref ObjectStorage
+        SECRETS: !Sub ${Environment}-${AppName}       
+
+Resources:
+  MainTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${Environment}-${AppName}"
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification: 
+        PointInTimeRecoveryEnabled: true      
+      ProvisionedThroughput:
+        ReadCapacityUnits: 100
+        WriteCapacityUnits: 100
+      AttributeDefinitions:
+        -
+          AttributeName: "PK"
+          AttributeType: "S"
+        -
+          AttributeName: "SK"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "PK"
+          KeyType: "HASH"
+        -
+          AttributeName: "SK"
+          KeyType: "RANGE"
+
+  ApiGatewayRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub ${Environment}-${AppName}
+      Description: !Sub ${AppName} Endpoint for ${Environment}
+      StageName: hlt
+      OpenApiVersion: 3.0.1
+      EndpointConfiguration:
+        Type: PRIVATE
+        VPCEndpointIds:
+          - !Sub ${vpce}
+      Auth:
+        ResourcePolicy:
+          CustomStatements:
+            -
+              Effect: "Deny"
+              Principal: "*"
+              Action:
+                - "execute-api:Invoke"
+              Resource: "execute-api:/*/*/*"
+              Condition:
+                StringNotEquals:
+                  aws:sourceVpc: !Sub ${vpc}
+                  aws:sourceVpce: !Sub ${vpce}
+            -
+              Effect: "Allow"
+              Principal: "*"
+              Action:
+                - "execute-api:Invoke"
+              Resource: "execute-api:/*/*/*"
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: Enterprise Health Literacy Tool
+          description: REST API Documentation
+          version: 1.0.0
+        x-amazon-apigateway-request-validators:
+          basic:
+            validateRequestBody: true
+            validateRequestParameters: true
+        x-amazon-apigateway-request-validator: basic
+        paths:
+          /rules:
+            get:
+              tags:
+              - rules
+              summary: get rules for a business unit
+              description: Returns a list of rules for a business unit
+              parameters:
+                - $ref: '#/components/parameters/app_id'
+                - $ref: '#/components/parameters/lang_id'
+              responses:
+                '200':
+                  description: Success
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/rules'
+                '400':
+                  description: Bad Request
+                  content: {}
+                '401':
+                  description: Unauthorized
+                  content: {}
+                '404':
+                  description: Not Found
+                  content: {}
+                '500':
+                  description: Internal Server Error
+                  content: {}
+              x-amazon-apigateway-request-validators:
+                basic:
+                  validateRequestParameters: true
+              x-amazon-apigateway-integration:
+                httpMethod: post
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetRules.Arn}/invocations
+          /form-fields:
+            get:
+              tags:
+              - rules
+              summary: get form-fields for a business unit
+              description: Returns a list of form-fields for a business unit
+              parameters:
+                - $ref: '#/components/parameters/app_id'
+                - $ref: '#/components/parameters/lang_id'
+              responses:
+                '200':
+                  description: Success
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/formfields'
+                '400':
+                  description: Bad Request
+                  content: {}
+                '401':
+                  description: Unauthorized
+                  content: {}
+                '404':
+                  description: Not Found
+                  content: {}
+                '500':
+                  description: Internal Server Error
+                  content: {}
+              x-amazon-apigateway-integration:
+                httpMethod: post
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetformFields.Arn}/invocations
+          /api-docs:
+            get:
+              tags:
+              - api-docs
+              summary: get api-docs
+              description: Returns a html for api-docs
+              responses:
+                '200':
+                  description: Bad Request
+                  content: {}
+              x-amazon-apigateway-integration:
+                httpMethod: post
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIDocs.Arn}/invocations
+          /openapi.yaml:
+            get:
+              tags:
+              - api-docs
+              summary: get api-docs yaml data
+              description: Returns a yaml for api-docs
+              responses:
+                '200':
+                  description: Bad Request
+                  content: {}
+              x-amazon-apigateway-integration:
+                httpMethod: post
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${APIDocs.Arn}/invocations
+          /process-rules:
+            post:
+              tags:
+              - rules
+              summary: process the document for the selected rules
+              description: this api processes the document (text/docx) file and returns respectives responses based on input.
+              requestBody:
+                description: Optional description in *Markdown*
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      oneOf:
+                      - $ref: '#/components/schemas/processEngineWithDocx'
+                      - $ref: '#/components/schemas/processEngineWithText'
+                    examples:
+                      Online:
+                        value:
+                          rules:
+                          - avoid_abbreviations
+                          - avoid_capitialized_words
+                          - avoid_certain_symbols
+                          - avoid_lengthy_nonmedical_words
+                          - avoid_medical_terms
+                          - avoid_passive_voice
+                          - avoid_statistics
+                          - check_document_readability
+                          - check_document_readability_api
+                          - define_acronyms
+                          - define_acronyms_every_x_paragraph
+                          - define_medical_terms
+                          - define_statistical_terms
+                          - include_contact_information
+                          - round_numbers_and_percentages
+                          - spell_out_first_word_if_number
+                          - use_absolute_risk
+                          - use_arabic_over_roman_numerals
+                          - use_camel_case_first_word
+                          - use_natural_frequencies
+                          - use_short_sentences
+                          - use_simple_sentences
+                          - use_small_paragraphs_sentence_count
+                          - use_small_paragraphs_word_count
+                          text: "3 months, 59.78% of the patients taking XELJANZ felt an improvement in RA joint
+                            pain and swelling. \n In 2012, XELJANZA (tofacitinib) was approved to treat adults
+                            with moderate to severe rheumatoid arthritis. \n The median agme of the group is
+                            42. \n 4 out of 10 patients were responding to treatment (41%), and around 3 out
+                            of 10 patients were in remission (31%) in Phase III"
+                          app_id: CDC
+                          metadata:
+                            website_ref_id: "online_swagger_test"
+                            user_id: xyz
+                            agency: Engage
+                            is_clinical_data: 1
+                            pls_type: Abstract
+                            version: '1.5'
+                            product: AML
+                            brand: ''
+                            user_document_id: '12345'
+                            document_type: ''
+                            business_unit: PBG-ONC
+                            country: India
+                            document_title: ''
+                            region: ''
+                            study_id_number: ''
+                      Offline:
+                        value:
+                          rules:
+                          - avoid_adverbs
+                          - avoid_banned_words
+                          - avoid_calculations
+                          - avoid_certain_symbols
+                          - avoid_italics
+                          - avoid_lengthy_nonmedical_words
+                          - avoid_medical_terms
+                          - avoid_passive_voice
+                          - avoid_statistics
+                          - avoid_underlining
+                          - avoid_whitespaces
+                          - check_disclosure_texts
+                          - check_document_readability
+                          - check_if_images_referenced
+                          - check_if_tables_referenced
+                          - check_summary
+                          - define_acronyms
+                          - define_medical_terms
+                          - include_date
+                          - include_study_sponsor
+                          - include_thankyou_statement
+                          - include_trail_id
+                          - include_trail_link
+                          - limit_adverb_count_per_document
+                          - round_numbers_and_percentages
+                          - skip_sections
+                          - spell_out_first_word_if_number
+                          - use_absolute_risk
+                          - use_acceptable_fonts
+                          - use_arabic_over_roman_numerals
+                          - use_correct_margins
+                          - use_different_heading_color
+                          - use_headings_in_question_format
+                          - use_larger_font_for_headings
+                          - use_minimum_font_size
+                          - use_minimum_line_spacing
+                          - use_natural_frequencies
+                          - use_short_sentences
+                          - use_simple_sentences
+                          - use_small_paragraphs_sentence_count
+                          - use_small_paragraphs_word_count
+                          file: staging/api/source/medical_terms_test.docx
+                          app_id: HLT
+                          metadata:
+                            website_ref_id: "offline_swagger_test"
+                            user_id: xyz
+                            agency: Engage
+                            is_clinical_data: 1
+                            pls_type: Abstract
+                            version: '1.5'
+                            product: AML
+                            brand: ''
+                            user_document_id: '12345'
+                            document_type: ''
+                            business_unit: PBG-ONC
+                            country: India
+                            document_title: ''
+                            region: ''
+                            study_id_number: ''
+              responses:
+                '200':
+                  description: Good Request
+                '202':
+                  description: Request Received
+                '400':
+                  description: Bad Request
+                  content: {}
+              # parameters:
+              # - in: header
+              #   name: InvocationType
+              #   schema:
+              #     type: string
+              #     enum:
+              #     - Event
+              x-amazon-apigateway-request-validators:
+                body-only:
+                  validateRequestParameters: false
+                  validateRequestBody: true
+              x-amazon-apigateway-request-validator: body-only
+              x-amazon-apigateway-integration:
+                httpMethod: post
+                type: aws
+                # type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ProcessRules.Arn}/invocations
+                requestParameters:
+                  integration.request.header.X-Amz-Invocation-Type: "'Event'"
+                responses:
+                  # 2\d{2}:
+                  #   statusCode: '200'
+                    # body: "{\"message\":\"Got your request!. We have started to process this file\"}"
+                  default:
+                    statusCode: '202'
+                    # body: "{\"message\":\"Something is not right!, damn!\"}"
+        components:
+          parameters:
+            app_id:
+              in: query
+              name: app_id
+              schema:
+                $ref: '#/components/schemas/appid'
+              required: true
+              description: business unit identifier
+            lang_id:
+              in: query
+              name: lang_id
+              schema:
+                $ref: '#/components/schemas/langid'
+              required: true
+              description: language code
+          schemas:
+            rules:
+              type: object
+              properties:
+                rule_id:
+                  type: string
+                description:
+                  type: string
+                display_text:
+                  type: string
+                is_mandatory:
+                  type: boolean
+                level:
+                  type: string
+                  description: document check level
+                  enum:
+                  - sentence
+                  - paragraph
+                  - doc_text
+                  - doc_xlxs
+            formfields:
+              type: object
+              properties:
+                field_id:
+                  type: object
+                form_type:
+                  type: string
+                display_text:
+                  type: string
+                values_map:
+                  type: object
+                values_list:
+                  type: array
+                  items:
+                    type: string
+                show_in_ui_doc_list:
+                  type: boolean
+            processEngineWithDocx:
+              type: object
+              properties:
+                file:
+                  type: string
+                  pattern: '(s3-|s3\.)?(.*)\.amazonaws\.com'
+                  description: S3 url eg https://s3...
+                app_id:
+                  $ref: '#/components/schemas/appid'
+                lang_id:
+                  $ref: '#/components/schemas/langid'
+                metadata:
+                  $ref: '#/components/schemas/metadata'
+                rules:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  uniqueItems: true
+                  description: from form field
+              required:
+              - file
+              - app_id
+              - metadata
+              - rules
+            processEngineWithText:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: text data to be processed
+                app_id:
+                  $ref: '#/components/schemas/appid'
+                lang_id:
+                  $ref: '#/components/schemas/langid'
+                metadata:
+                  $ref: '#/components/schemas/metadata'
+                rules:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  uniqueItems: true
+                  description: unique rule_id to process 
+              required:
+              - text
+              - app_id
+              - metadata
+              - rules
+            metadata:
+              type: object
+              properties:
+                website_ref_id:
+                  type: string
+                  minLength: 1
+                  description: a unique id for website folks to refer in the future
+                user_id:
+                  type: string
+                  minLength: 1
+                  description: mostly the NTID or a unique user_id from the website team
+                agency:
+                  type: string
+                  description: agency name of the user requesting
+                business_unit:
+                  type: string
+                  description: from form field 
+                is_clinical_study:
+                  type: boolean
+                  description: from form field 
+                country:
+                  type: string
+                  description: from form field 
+                document_id:
+                  type: string
+                  description: from form field 
+                document_type:
+                  type: string
+                  description: from form field 
+                pls_type:
+                  type: string
+                  description: from form field 
+                product:
+                  type: string
+                  description: from form field 
+                region:
+                  type: string
+                  description: from form field 
+                study_number:
+                  type: string
+                  description: from form field 
+                version:
+                  type: string
+                  description: from form field 
+              required:
+              - website_ref_id
+              - user_id
+            appid:
+              type: string
+              enum:
+              - HLT
+              - CDC
+              - MW
+              - MI
+              - CT
+            langid:
+              type: string
+              enum:
+              - en
+              - es
+
+  s3BucketSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: !Sub "${Environment}-${AppName}"
+      Description: S3 bucket secrets
+      SecretString: !Sub '{
+                          "AWS_ACCESS_KEY":"${S3AwsAccessKey}",
+                          "AWS_SECRET":"${S3AwsSecret}",
+                          "S3_BUCKET_NAME":"${S3BucketName}",
+                          "invokeUrl":"https://${ApiGatewayRestApi}-${vpce}.execute-api.${AWS::Region}.amazonaws.com/hlt/",
+                          "SQS_Queue_Name":"${SQSQueueName}",
+                          "READABILITY_API_CDC":"${ReadabilityApiCdc}"
+                          }'
+      Tags:
+        -
+          Key: AppName
+          Value: !Sub "${Environment}-${AppName}"
+
+  lambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub CUSPFE-${Environment}-${AppName}-LambdaExecRole
+      PermissionsBoundary: !Sub arn:aws:iam::${AWS::AccountId}:policy/PFE-BASELINE-DelegatedUserPermission-Boundary
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns: 
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole"
+        - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB"
+        - "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+        - "arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy"
+        - "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+
+  GetformFields:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-${AppName}-get_form_fields"
+      PackageType: Image
+      ImageUri: !Sub ${GetFormFieldsImagePath}
+      Role: !GetAtt lambdaFunctionRole.Arn
+      Events:
+          Request:
+            Type: Api
+            Properties:
+              RestApiId: !Ref ApiGatewayRestApi
+              Path: '/form-fields'
+              Method: get
+    Metadata:
+      DockerTag: !Sub "${Environment}"
+      # DockerTag: rapid-1.37.0-x86_64
+      DockerContext: ./functions/get_form_fields
+      Dockerfile: Dockerfile
+  GetRules:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-${AppName}-get_rules"
+      PackageType: Image
+      ImageUri: !Sub ${GetRulesImagePath}
+      Role: !GetAtt lambdaFunctionRole.Arn
+      Events:
+          Request:
+            Type: Api
+            Properties:
+              RestApiId: !Ref ApiGatewayRestApi
+              Path: '/rules'
+              Method: get
+    Metadata:
+      DockerTag: !Sub "${Environment}"
+      # DockerTag: rapid-1.37.0-x86_64
+      DockerContext: ./functions/get_rules
+      Dockerfile: Dockerfile
+
+  APIDocs:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-${AppName}-api_docs"
+      PackageType: Image
+      ImageUri: !Sub ${APIDocsFunctionImagePath}
+      Role: !GetAtt lambdaFunctionRole.Arn
+      Events:
+          HTML:
+            Type: Api
+            Properties:
+              RestApiId: !Ref ApiGatewayRestApi
+              Path: '/api-docs'
+              Method: get
+          YAML:
+            Type: Api
+            Properties:
+              RestApiId: !Ref ApiGatewayRestApi
+              Path: '/openapi.yaml'
+              Method: get
+    Metadata:
+      DockerTag: !Sub "${Environment}"
+      # DockerTag: rapid-1.37.0-x86_64
+      DockerContext: ./functions/api_docs
+      Dockerfile: Dockerfile
+
+  ProcessRules:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Environment}-${AppName}-process_rules"
+      PackageType: Image
+      ImageUri: !Sub ${ProcessRulesFunctionImagePath}
+      Role: !GetAtt lambdaFunctionRole.Arn
+      Events:
+          Request:
+            Type: Api
+            Properties:
+              RestApiId: !Ref ApiGatewayRestApi
+              Path: '/process-rules'
+              Method: post
+    Metadata:
+      DockerTag: !Sub "${Environment}"
+      # DockerTag: rapid-1.37.0-x86_64
+      DockerContext: ./functions/process_rules
+      Dockerfile: Dockerfile
+
+  ObjectStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${Environment}-${AppName}"
+      VersioningConfiguration:
+        Status: Enabled      
+      PublicAccessBlockConfiguration : 
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+Outputs:
+  DataEndpoint:
+    Description: "API stage endpoint"
+    Value: !Sub "https://${ApiGatewayRestApi}-${vpce}.execute-api.${AWS::Region}.amazonaws.com/hlt"
+
+
+
