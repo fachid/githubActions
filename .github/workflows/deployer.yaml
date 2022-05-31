@@ -1,5 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-
 name: deployer
 
 # Controls when the workflow will run
@@ -39,8 +38,10 @@ jobs:
 
           # set the application name
           appName=`jq -r .ApplicationName .github/workflows/config.json`
+          
           if [ $appName == "null" ]; then
-            
+            echo "No application name defined!"
+            exit 1
           fi
 
           echo "APP_NAME=$appName" >> $GITHUB_ENV 
