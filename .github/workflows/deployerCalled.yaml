@@ -77,13 +77,13 @@ jobs:
           echo ${{ secrets.VPC }}
           echo ${{ secrets.VPC }} | sed -e 's/\(.\)/\1 /g'
 
-          echo "VP=VPC" >> $GITHUB_ENV
+          echo "secret_name=VPC" >> $GITHUB_ENV
 
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         env: 
-          vpci: VPC
+          secret_name: VPC
         run: |
 
           params=`yq e '.Parameters | keys | .[]' enterpriseHLT-stack.yaml`
@@ -95,7 +95,7 @@ jobs:
           done
           
           echo "--------------"
-          echo ${{ env.VP }} - ${{ env.vpci }}
-          echo "${{ secrets['vpci'] }}"
-          echo "${{ secrets[${env.VP}] }}"
-          echo "${{ secrets[${env.vpci}] }}"
+          echo ${{ secrets.VPC }}
+
+          echo "secrets.$secret_name = ${{ secrets[env.secret_name] }}"
+
