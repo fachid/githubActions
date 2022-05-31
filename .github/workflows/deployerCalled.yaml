@@ -90,8 +90,9 @@ jobs:
           do
             echo "parameter -> $I"
             p=`echo "$I" | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'`
-
-            echo ${{ secrets[env.VP] }}
-
           done
-
+          
+          echo "--------------"
+          echo ${{ env.VP }}
+          echo ${{ secrets[env.VP] }}
+          
