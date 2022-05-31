@@ -96,6 +96,8 @@ jobs:
           
           echo "--------------"
           echo ${{ secrets.VPC }}
+          aa=VPC
 
-          echo "secrets.$secret_name = ${{ secrets[env.secret_name] }}"
+          echo "secrets.$secret_name = ${{ secrets[env.secret_name] }} " | rev
+          echo "secrets.$secret_name = ${{ secrets[$aa] }} " | rev
 
