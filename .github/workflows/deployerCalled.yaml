@@ -32,52 +32,52 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup Environment Variables
-      id: variables
-      run: |
+    # - name: Setup Environment Variables
+    #   id: variables
+    #   run: |
 
-        # set short commit ID
-        #echo "SHORT_COMMIT_ID=${GITHUB_SHA::8}" >> $GITHUB_ENV 
-        echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
+    #     # set short commit ID
+    #     #echo "SHORT_COMMIT_ID=${GITHUB_SHA::8}" >> $GITHUB_ENV 
+    #     echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
 
-        # set the application name
-        appName=`yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml`        
-        if [ $appName == "null" ]; then
-          echo "No application name defined!"
-          exit 1
-        fi
-        echo "APP_NAME=$appName" >> $GITHUB_ENV 
+    #     # set the application name
+    #     appName=`yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml`        
+    #     if [ $appName == "null" ]; then
+    #       echo "No application name defined!"
+    #       exit 1
+    #     fi
+    #     echo "APP_NAME=$appName" >> $GITHUB_ENV 
 
-        # Set Environment by Branch Name (sbx is all outside of protected branches)
-        # This also sets the role to assume from secrets based on branch
+    #     # Set Environment by Branch Name (sbx is all outside of protected branches)
+    #     # This also sets the role to assume from secrets based on branch
 
-        echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build if vulnerabilities found
+    #     echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build if vulnerabilities found
         
-        if [ ${{ github.ref_name }} == "main" ]; then
-          echo "ENVIRONMENT=test" >> $GITHUB_ENV
-          # echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build in case of vulnerabilities found for test
-        elif [ ${{ github.ref_name }} == "dev" ]; then
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-        else
-          lowercase=`echo sbx-${{ github.ref_name }} | tr '[:upper:]' '[:lower:]'`  # conver to lowercase
-          echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
-          fi
+    #     if [ ${{ github.ref_name }} == "main" ]; then
+    #       echo "ENVIRONMENT=test" >> $GITHUB_ENV
+    #       # echo "CONTINUE_ON_ERROR=${{ false }}" >> $GITHUB_ENV # break the build in case of vulnerabilities found for test
+    #     elif [ ${{ github.ref_name }} == "dev" ]; then
+    #       echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+    #     else
+    #       lowercase=`echo sbx-${{ github.ref_name }} | tr '[:upper:]' '[:lower:]'`  # conver to lowercase
+    #       echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
+    #       fi
 
 
-    # check repo structure
-    - name: Check repository.
-      runs: |
-        echo "check repo"
+    # # check repo structure
+    # - name: Check repository.
+    #   runs: |
+    #     echo "check repo"
 
 
 
-    # configure credentials with OIDC
-    - name: configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ secrets.OIDC_ROLE }}
-        role-session-name: ${{ env.ENVIRONMENT }}-${{ env.APP_NAME }}
-        aws-region: ${{ secrets.AWS_REGION }}
+    # # configure credentials with OIDC
+    # - name: configure aws credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ secrets.OIDC_ROLE }}
+    #     role-session-name: ${{ env.ENVIRONMENT }}-${{ env.APP_NAME }}
+    #     aws-region: ${{ secrets.AWS_REGION }}
 
 
 
