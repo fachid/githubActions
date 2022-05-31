@@ -1,32 +1,35 @@
-# This is a basic workflow to help you get started with Actions
 name: deployer
 
-# Controls when the workflow will run
 on:
 
-  # Allows you to run this workflow manually from the Actions tab
+
   workflow_dispatch:
   workflow_call:
     inputs:
-      username:
+      Environment:
         required: true
         type: string
+      StackTemplate: enterpriseHLT-stack .yaml
     secrets:
       VPC:
         required: false
+      AWS_ACCOUNT:
+        required: true
+      OIDC_ROLE:
+        required: true
+      AWS_REGION:
+        required: true                        
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
-  # This workflow contains a single job called "build"
+
   build:
-    # The type of runner that the job will run on
+    name: deploy workflow
+    environment: ${{ github.event.inputs.Environment }}  
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
 
       - name: Setup Environment Variables
         id: variables
@@ -37,13 +40,11 @@ jobs:
           echo "SHORT_COMMIT_ID=`git rev-parse --short HEAD`" >> $GITHUB_ENV 
 
           # set the application name
-          appName=`jq -r .ApplicationName .github/config.json`
-          
+          appName=`yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml`        
           if [ $appName == "null" ]; then
             echo "No application name defined!"
             exit 1
           fi
-
           echo "APP_NAME=$appName" >> $GITHUB_ENV 
 
           # Set Environment by Branch Name (sbx is all outside of protected branches)
@@ -61,11 +62,29 @@ jobs:
             echo "ENVIRONMENT=$lowercase" >> $GITHUB_ENV
           fi
 
-          jq -r .ApplicationName .github/config.json
-          yq e .application.name .github/config.yaml
 
-          yq e .ApplicationData.Properties.Name enterpriseHLT-stack.yaml
-          
+    # check repo structure
+    - name: Check repository.
+
+
+
+
+    # configure credentials with OIDC
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ secrets.OIDC_ROLE }}
+        role-session-name: ${{ env.ENVIRONMENT }}-${{ env.APP_NAME }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+
+
+
+
+
+
+
+
 
 
       # Runs a set of commands using the runners shell
