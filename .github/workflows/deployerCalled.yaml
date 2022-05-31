@@ -96,6 +96,6 @@ jobs:
           
           echo "--------------"
           echo ${{ env.VP }} - ${{ env.vpci }}
-          echo "${{ secrets[env.VP] }}"
-          echo "${{ secrets[env.vpci] }}"
+          echo "${{ secrets[env.'VP'] }}"
+          echo "${{ secrets[env.'vpci'] }}"
           
