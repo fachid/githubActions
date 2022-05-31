@@ -1,24 +1,23 @@
 name: deployer
 
 on:
-
-
   workflow_dispatch:
   workflow_call:
     inputs:
       Environment:
         required: true
         type: string
-      StackTemplate: enterpriseHLT-stack .yaml
+      StackTemplate: enterpriseHLT-stack.yaml
+        type: string
     secrets:
       VPC:
         required: false
       AWS_ACCOUNT:
-        required: true
+        required: false
       OIDC_ROLE:
-        required: true
+        required: false
       AWS_REGION:
-        required: true
+        required: false
 
 
 jobs:
@@ -26,9 +25,7 @@ jobs:
     name: deploy workflow
     environment: ${{ github.event.inputs.Environment }}  
     runs-on: ubuntu-latest
-    
     steps:
-
 
     - name: Checkout
       uses: actions/checkout@v3
