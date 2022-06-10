@@ -31,13 +31,16 @@ jobs:
           echo test, and deploy your project.
           mkdir REPO
           ls -la
+          env
+
 
 
       - name: Checkout
         uses: actions/checkout@v3
         with:
           repository: pfizer/vessel-workflows
-          path: './REPO'
+          path: REPO
+          ref: main
 
 
       # Runs a set of commands using the runners shell
