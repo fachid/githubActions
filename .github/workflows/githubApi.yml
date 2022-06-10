@@ -34,9 +34,9 @@ jobs:
 
 
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v3
         with:
-          repository: ${{ github.event.inputs.REPO }}
+          repository: pfizer/vessel-workflows
           path: './REPO'
 
 
