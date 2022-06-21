@@ -4,4 +4,3 @@ pandas
 flask_cors
 flask-swagger-ui
 retrying
-boto3==1.21.8
