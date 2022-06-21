@@ -44,6 +44,11 @@ jobs:
         run: |        
           snyk container test busybox:test --file=Dockerfile 
 
+      - name: snyk code
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}      
+        run: |        
+          snyk code
 
 
       # - name: Snyk
