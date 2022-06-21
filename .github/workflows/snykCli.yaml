@@ -27,20 +27,21 @@ jobs:
           chmod +x ./snyk
           mv ./snyk /usr/local/bin/             
 
+      - name: build image
+        run: |
+          docker build -f Dockerfile_busybox -t busybox:test . 
+
       - name: snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}      
         run: |
-       
           snyk test
           
 
       - name: snyk container test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}      
-        run: |
-          
-          docker build -f Dockerfile_busybox -t busybox:test .
+        run: |        
           snyk container test busybox:test --file=Dockerfile 
 
 
