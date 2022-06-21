@@ -57,7 +57,8 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}      
         run: |        
           docker pull zricethezav/gitleaks:latest
-          docker run -v ./:./ zricethezav/gitleaks:latest detect --source="./"
+          # docker run -v ./:./ zricethezav/gitleaks:latest detect --source="./"
+          docker run -v zricethezav/gitleaks:latest detect --source="./"
 
 
 
