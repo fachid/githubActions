@@ -1,4 +1,13 @@
+FROM jenkins/jenkins:2.334
+USER root
+
+RUN apt-get update \
+      && apt-get --allow-unauthenticated install -y sudo \
+      && rm -rf /var/lib/apt/lists/*
+RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+RUN apt-get update -y && apt-get install -y python3-dev
+
 # Use busybox as the base image
-FROM busybox
+#FROM busybox
 # Run the executable file
-CMD /home/main
+#CMD /home/main
