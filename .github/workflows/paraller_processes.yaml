@@ -37,9 +37,9 @@ jobs:
 
 
         # set short commit ID
-        cd 
+
+        cd ../image2
         pwd
-        cd image2
         ls -la
         echo "---------------------------------"
         docker images
