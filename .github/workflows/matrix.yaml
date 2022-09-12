@@ -12,8 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ${{ github.event.inputs.images }}
-        # image: ${{ fromJSON(github.event.inputs.images) }}
+        # image: ${{ github.event.inputs.images }}
+        image: ${{ fromJSON(github.event.inputs.images) }}
     runs-on: ubuntu-latest
 #    env:
 #      JDK_VERSION:  ${{ matrix.jdk }}
