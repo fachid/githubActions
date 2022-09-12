@@ -1,0 +1,30 @@
+
+on:
+  workflow_dispatch:
+
+name: IAS-EnterpriseHLT Deployment
+
+permissions:
+  id-token: write
+  contents: write    # This is required for actions/checkout@v2
+
+jobs:
+  deployEnterpriseHLT:
+    name: Deploy EnterpriseHLT Stack to AWS Development Account
+    runs-on: ubuntu-latest
+    steps:
+
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+
+    - name: Setup Environment Variables
+      id: variables
+      run: |
+        # set short commit ID
+        ls -la 
+        
+
