@@ -4,23 +4,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - id: set-matrix
-      run: |
-        echo "::set-output name=matrix::[{\"go\":\"1.13\",\"commit\":\"v1.0.0\"},{\"go\":\"1.14\",\"commit\":\"v1.2.0\"}]"
-
-
-
-  builder:
-    needs: job1
-    runs-on: ubuntu-latest
+  gradle:
     strategy:
+      fail-fast: false
       matrix:
-        cfg: ${{fromJson(needs.job1.outputs.matrix)}}
+        image: [image1,image2]
+#    runs-on: ${{ matrix.os }}
+#    env:
+#      JDK_VERSION:  ${{ matrix.jdk }}
+
+
+
     steps:
-    - run: |
-        echo bin-${{ matrix.cfg.go }}-${{ matrix.cfg.commit }}
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo ${{ matrix.image }}
+ #         echo "usernam = ${{ inputs.username }}"
+ #         echo "called workflow test, and deploy your project."
