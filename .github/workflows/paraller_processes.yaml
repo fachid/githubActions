@@ -26,5 +26,7 @@ jobs:
       run: |
         # set short commit ID
         ls -la 
-        
+        cd image1
+        docker images
+        docker build -f Dockerfile -t image1:1 .
 
