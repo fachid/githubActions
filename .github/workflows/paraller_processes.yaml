@@ -31,7 +31,7 @@ jobs:
         echo "---------------------------------"
         docker images
         echo "---------------------------------"
-        docker build -f Dockerfile -t image1:1 .
+        docker build -f Dockerfile -t image1:1 . &
         echo "---------------------------------"
         docker images
 
