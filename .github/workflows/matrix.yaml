@@ -9,7 +9,7 @@ on:
       NODE_VERSION:
         description: provide all node versions in stringified array format
         required: true
-        default: "'10','16'"
+        default: "'1','10'"
 jobs:
   prebuild:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "::set-output name=os::${{format('[{0}]',github.event.inputs.OS)}}"
           echo "::set-output name=nodeVersion::${{format('[{0}]',github.event.inputs.NODE_VERSION)}}"
-          
+
   build:
     needs: prebuild
     runs-on: ubuntu-latest
@@ -33,4 +33,6 @@ jobs:
         NODE_VERSION: ${{fromJSON(needs.prebuild.outputs.nodeVersion)}}
     steps:
       - name: running
-        run: echo "running job with ${{ matrix.OS }} ${{ matrix.NODE_VERSION }}"
+        run: |
+        sleep  ${{ matrix.NODE_VERSION }}
+        echo "running job with ${{ matrix.OS }} ${{ matrix.NODE_VERSION }}"
