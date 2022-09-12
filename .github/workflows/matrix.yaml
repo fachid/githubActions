@@ -2,13 +2,17 @@ name: matrix
 
 on:
   workflow_dispatch:
+    inputs:
+      images:
+        description: 'api_docs function Image URI'
+        default: ''
 
 jobs:
   gradle:
     strategy:
       fail-fast: false
       matrix:
-        image: [image1,image2]
+        image: ${{ github.event.inputs.Environment }}
     runs-on: ubuntu-latest
 #    env:
 #      JDK_VERSION:  ${{ matrix.jdk }}
