@@ -1,32 +1,36 @@
 name: matrix
-
 on:
   workflow_dispatch:
     inputs:
-      images:
-        description: 'api_docs function Image URI'
-        default: ''
-
+      OS:
+        description: provide all OS in stringified array format
+        required: true
+        default: "'ubuntu-latest','windows-latest'"
+      NODE_VERSION:
+        description: provide all node versions in stringified array format
+        required: true
+        default: "'10','16'"
 jobs:
-  gradle:
+  prebuild:
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.set-matrix.outputs.os }}
+      nodeVersion: ${{ steps.set-matrix.outputs.nodeVersion }}
+    steps:
+      - id: set-matrix
+        run: |
+          echo "::set-output name=os::${{format('[{0}]',github.event.inputs.OS)}}"
+          echo "::set-output name=nodeVersion::${{format('[{0}]',github.event.inputs.NODE_VERSION)}}"
+          
+  build:
+    needs: prebuild
+    runs-on: ubuntu-latest
+    name: "${{ matrix.OS }} ${{ matrix.NODE_VERSION }}"
     strategy:
       fail-fast: false
       matrix:
-        # image: ${{ github.event.inputs.images }}
-        image: ${{ fromJSON(github.event.inputs.images) }}
-    runs-on: ubuntu-latest
-#    env:
-#      JDK_VERSION:  ${{ matrix.jdk }}
-
-
-
+        OS: ${{fromJSON(needs.prebuild.outputs.os)}}
+        NODE_VERSION: ${{fromJSON(needs.prebuild.outputs.nodeVersion)}}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo ${{ matrix.image }}
- #         echo "usernam = ${{ inputs.username }}"
- #         echo "called workflow test, and deploy your project."
+      - name: running
+        run: echo "running job with ${{ matrix.OS }} ${{ matrix.NODE_VERSION }}"
