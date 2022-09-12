@@ -2,7 +2,7 @@
 on:
   workflow_dispatch:
 
-name: IAS-EnterpriseHLT Deployment
+name: parallel_processes
 
 permissions:
   id-token: write
