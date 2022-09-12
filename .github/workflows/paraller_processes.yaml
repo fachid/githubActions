@@ -25,12 +25,26 @@ jobs:
       id: variables
       run: |
         # set short commit ID
-        ls -la 
+        pwd
         cd image1
+        ls -la
         echo "---------------------------------"
         docker images
         echo "---------------------------------"
         docker build -f Dockerfile -t image1:1 .
+        echo "---------------------------------"
+        docker images
+
+
+        # set short commit ID
+        cd 
+        pwd
+        cd image2
+        ls -la
+        echo "---------------------------------"
+        docker images
+        echo "---------------------------------"
+        docker build -f Dockerfile -t image2:1 .
         echo "---------------------------------"
         docker images
 
