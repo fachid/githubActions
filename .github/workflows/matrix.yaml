@@ -30,8 +30,8 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          echo needs.prebuild.outputs.os
-          echo needs.prebuild.outputs.nodeVersion
+          echo ${{needs.prebuild.outputs.os}}
+          echo ${{needs.prebuild.outputs.nodeVersion}}
 
   build:
     needs: prebuild
