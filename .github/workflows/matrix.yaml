@@ -20,7 +20,9 @@ jobs:
       - id: set-matrix
         run: |
           echo "::set-output name=os::${{format('[{0}]',github.event.inputs.OS)}}"
-          echo "::set-output name=nodeVersion::${{format('[{0}]',github.event.inputs.NODE_VERSION)}}"
+          # echo "::set-output name=nodeVersion::${{format('[{0}]',github.event.inputs.NODE_VERSION)}}"
+          value='1,2,3'
+          echo "::set-output name=nodeVersion::$value"
 
   build:
     needs: prebuild
