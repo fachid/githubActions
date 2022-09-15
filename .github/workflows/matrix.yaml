@@ -22,7 +22,7 @@ jobs:
           echo "::set-output name=os::${{format('[{0}]',github.event.inputs.OS)}}"
           # echo "::set-output name=nodeVersion::${{format('[{0}]',github.event.inputs.NODE_VERSION)}}"
           # value='[1,2,3]'
-          value="[1,2, 3,]"
+          value="[aaa,bbb, ccc,]"
           echo "::set-output name=nodeVersion::$value"
 
   print:
