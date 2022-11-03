@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       bool:
-        typo: boolean
+        type: boolean
         description: 'boolean'
         required: true
        choice:
