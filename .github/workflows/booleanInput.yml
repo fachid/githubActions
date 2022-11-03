@@ -1,0 +1,31 @@
+name: booleanInput
+
+on:
+  workflow_dispatch:
+    inputs:
+      bool:
+        typo: boolean
+        description: 'boolean'
+        required: true
+       choice:
+        type: choice
+        description: 'choice'
+        required: true
+        options:
+        - true
+        - false
+
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Analysing the code with pylint
+      run: |
+        echo "boolen: ${{ github.event.inputs.bool }}"
+        echo "choice: ${{ github.event.inputs.choice }}"
