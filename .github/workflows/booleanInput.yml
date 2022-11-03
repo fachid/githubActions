@@ -1,5 +1,3 @@
-name: booleanInput
-
 on:
   workflow_dispatch:
     inputs:
@@ -7,7 +5,8 @@ on:
         type: boolean
         description: 'boolean'
         required: true
-       choice:
+
+      choice:
         type: choice
         description: 'choice'
         required: true
@@ -15,11 +14,11 @@ on:
         - true
         - false
 
-
+name: booleanInput
 
 jobs:
   build:
-
+    name: boolean
     runs-on: ubuntu-latest
 
     steps:
