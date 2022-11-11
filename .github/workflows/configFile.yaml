@@ -15,7 +15,7 @@ jobs:
 
       - name: Run a one-line script
         run: |
-          config=`cat config.txt`
+          config=`cat config.txt |tr '\n' ''`
           echo $config
 
           echo "CONFIG=$config" >> $GITHUB_ENV
