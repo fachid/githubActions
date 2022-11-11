@@ -1,0 +1,30 @@
+name: config
+
+on:
+  workflow_dispatch:
+
+env:
+  var: testVar
+
+jobs:
+  first:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a one-line script
+        run: |
+          config=`cat config.txt`
+          echo $config
+
+          echo "CONFIG=$config" >> $GITHUB_ENV
+
+
+      - name: Run a one-line script
+        run: |
+          echo $GITHUB_ENV
+
+          file $GITHUB_ENV
+          cat $GITHUB_ENV
+          echo ${{ env.CONFIG }}

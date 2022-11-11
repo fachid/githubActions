@@ -1,0 +1,8 @@
+HealthCheckPath=/aeapi/docs,
+Cpu=2048,
+DesiredCount=1,        
+HealthCheckGracePeriodSeconds=300,        
+Memory=8192,       
+PathPattern=/aeapi/*,
+Port=8000,
+Priority=1
